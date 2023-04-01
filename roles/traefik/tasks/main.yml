@@ -42,7 +42,7 @@
 - name: Copy Traefik config
   ansible.builtin.copy:
     src: config
-    dest: /etc/traefik/config
+    dest: /etc/traefik/
     mode: "0755"
   notify:
     - restart traefik

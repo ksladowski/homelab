@@ -3,6 +3,9 @@ log:
   filePath: /etc/traefik/log
   level: DEBUG
 
+serversTransport:
+  insecureSkipVerify: true
+
 entryPoints:
   web:
     address: :80

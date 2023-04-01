@@ -5,7 +5,11 @@ all:
   children:
     containers:
       hosts:
-        netbox: 
-          ansible_host: 192.168.1.104
         traefik:
           anisble_host: 192.168.1.129
+        pihole:
+          anisble_host: 192.168.1.202
+        auth:
+          anisble_host: 192.168.1.128
+        netbox: 
+          ansible_host: 192.168.1.104

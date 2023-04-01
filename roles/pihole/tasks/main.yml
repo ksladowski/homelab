@@ -1,0 +1,23 @@
+- stat:
+    path: /usr/local/bin/pihole
+  register: pihole_binary
+  
+- set_fact:
+    pihole_installed: "{{ pihole_binary.stat.exists | default(false) }}"
+
+- name: download install script
+  get_url:
+    url: https://install.pi-hole.net
+    dest: ~/pihole-install.sh
+    mode: u+rwx
+  when: not pihole_installed
+
+- name: run install script
+  shell: ~/pihole-install.sh --unattended
+  when: not pihole_installed
+
+- name: copy wildcard dns record
+  copy:
+    src: wildcard
+    dest: /etc/dnsmasq.d/03-custom-dns.conf
+  notify: reboot

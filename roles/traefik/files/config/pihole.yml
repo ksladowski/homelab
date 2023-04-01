@@ -1,9 +1,9 @@
 ---
 http:
   routers:
-    traefik:
-      rule: Host(`traefik.sladnet.xyz`)
-      service: traefik
+    pihole:
+      rule: Host(`pihole.sladnet.xyz`)
+      service: pihole
       tls:
         certResolver: letsencrypt
         domains:
@@ -11,7 +11,7 @@ http:
             sans:
               - "*.sladnet.xyz"
   services:
-      traefik:
+      pihole:
         loadBalancer:
           servers:
-            - url: "http://192.168.1.129:8080"
+            - url: "http://192.168.1.202"
