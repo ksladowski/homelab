@@ -1,0 +1,97 @@
+---
+- name: "Install required packages"
+  dnf:
+    name: "{{item}}"
+    state: latest
+  with_items: 
+    - git
+    - gcc
+    - libxml2-devel
+    - libxslt-devel
+    - libffi-devel
+    - libpq-devel
+    - openssl-devel
+    - redhat-rpm-config
+
+- name: "Create a directory if it does not exist"
+  file:
+    path: /opt/netbox
+    state: directory
+
+- name: "Clone netbox repo"
+  git:
+    repo: "https://github.com/netbox-community/netbox.git"
+    dest: /opt/netbox
+    depth: 1
+    single_branch: yes
+    version: master
+  notify: netbox upgrade script
+
+- name: "Add netbox group"
+  group:
+    name: netbox
+    state: present
+    system: true
+
+- name: "Create netbox user"
+  user:
+    name: netbox
+    groups: netbox
+    system: true
+
+- name: "Set ownership of media directory"
+  file:
+    path: /opt/netbox/netbox/media
+    state: directory
+    recurse: true
+    owner: netbox
+
+- name: "Deploy configuration.py"
+  template:
+    src: netbox_config.py.j2
+    dest: /opt/netbox/netbox/netbox/configuration.py
+
+# at this point, do the following to activate the virtual environment and create a superuser.
+#
+# source /opt/netbox/venv/bin/activate
+# cd /opt/netbox/netbox
+# python3 manage.py createsuperuser
+
+- name: "Set up 'housekeeping' cron job"
+  cron:
+    name: netbox-housekeeping
+    job: /opt/netbox/contrib/netbox-housekeeping.sh
+    hour: 0
+    minute: 0
+
+- name: "Copy default gunicorn config. Currently not worried about making changes here"
+  copy:
+    src: /opt/netbox/contrib/gunicorn.py
+    dest: /opt/netbox/gunicorn.py
+    remote_src: true
+
+- name: "Install included systemd services"
+  copy:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/
+    remote_src: true
+  with_items:
+  - /opt/netbox/contrib/netbox.service
+  - /opt/netbox/contrib/netbox-rq.service
+
+- name: "Enable required services"
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: true
+  with_items:
+    - netbox
+    - netbox-rq
+
+- name: "Copy site config to nginx directory"
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    notify: restart nginx
+  

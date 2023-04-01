@@ -1,0 +1,10 @@
+- name: netbox
+  hosts: netbox
+
+  roles:
+    - common
+    - postgres
+    - redis
+    - nginx
+    - netbox
+  

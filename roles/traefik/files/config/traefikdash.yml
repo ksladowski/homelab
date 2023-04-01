@@ -1,0 +1,17 @@
+---
+http:
+  routers:
+    netbox:
+      rule: Host(`traefik.sladnet.xyz`)
+      service: netbox
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: "sladnet.xyz"
+            sans:
+              - "*.sladnet.xyz"
+  services:
+      netbox:
+        loadBalancer:
+          servers:
+            - url: "http://traefik:8080"

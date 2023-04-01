@@ -1,0 +1,8 @@
+---
+- name: traefik
+  hosts: traefik
+
+  roles: 
+    - common
+    - traefik
+    

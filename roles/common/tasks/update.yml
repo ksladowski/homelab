@@ -1,0 +1,22 @@
+- name: upgrade all packages
+  dnf:
+    name: "*"
+    state: latest
+  notify: reboot
+
+- name: install reqd' packages for vscode ssh server
+  dnf:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - tar
+    - wget
+    - which
+
+- name: "Install required packages for python/pip"
+  dnf:
+    name: "{{item}}"
+    state: latest
+  with_items: 
+    - python-setuptools
+    - python-pip

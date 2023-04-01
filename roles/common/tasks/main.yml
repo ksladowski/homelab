@@ -1,0 +1,5 @@
+- name: "Ensure system up to date"
+  import_tasks: update.yml
+
+- name: "Enable ssh access via 'admin' user"
+  import_tasks: admin.yml
