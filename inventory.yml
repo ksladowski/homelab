@@ -8,8 +8,12 @@ all:
         traefik:
           anisble_host: 192.168.1.129
         pihole:
-          anisble_host: 192.168.1.202
+          anisble_host: 192.168.1.3
         auth:
           anisble_host: 192.168.1.128
         netbox: 
           ansible_host: 192.168.1.104
+        jellyfin:
+          ansible_host: 192.168.1.143
+        firefly:
+          ansible_host: 192.168.1.141

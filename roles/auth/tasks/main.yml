@@ -1,0 +1,6 @@
+---
+- name: Install lldap
+  ansible.builtin.unarchive:
+    src: https://github.com/lldap/lldap/releases/download/v0.4.2/amd64-lldap.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
