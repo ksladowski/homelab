@@ -1,0 +1,50 @@
+- name: Add RPM fusion for ffmpeg
+  dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+    state: present
+  with_items:
+    - epel-next-release
+    - https://download1.rpmfusion.org/free/el/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm
+  notify: reboot
+
+- name: Install ffmpeg and jellyfin
+  dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+    state: present
+    enablerepo: crb # CodeReady linux Builder repo - part of epel
+  with_items:
+    - ffmpeg
+    - https://repo.jellyfin.org/releases/server/centos/stable/server/jellyfin-server-10.8.9-1.el7.x86_64.rpm
+    - https://repo.jellyfin.org/releases/server/centos/stable/web/jellyfin-web-10.8.9-1.el7.noarch.rpm
+    - https://repo.jellyfin.org/releases/server/centos/stable/server/jellyfin-10.8.9-1.el7.x86_64.rpm
+
+- name: Install nfs-utils
+  dnf:
+    name: nfs-utils
+    state: present
+
+- name: Mount movie share
+  mount:
+    boot: false
+    fstype: nfs
+    src: omv.lan:/export/movies
+    path: /mnt/movies
+    opts: rw,hard
+    state: mounted
+
+- name: Mount shows share
+  mount:
+    boot: false
+    fstype: nfs
+    src: omv.lan:/export/shows
+    path: /mnt/shows
+    opts: rw,hard
+    state: mounted
+
+- name: Enable and start jellyfin
+  systemd:
+    name: jellyfin
+    state: started  
+    enabled: true

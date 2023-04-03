@@ -1,9 +1,9 @@
 ---
 http:
   routers:
-    pihole:
-      rule: Host(`pihole.sladnet.xyz`)
-      service: pihole
+    omv:
+      rule: Host(`omv.sladnet.xyz`)
+      service: omv
       tls:
         certResolver: letsencrypt
         domains:
@@ -11,7 +11,7 @@ http:
             sans:
               - "*.sladnet.xyz"
   services:
-      pihole:
+      omv:
         loadBalancer:
           servers:
-            - url: "http://192.168.1.3/admin"
+            - url: "http://192.168.1.213"

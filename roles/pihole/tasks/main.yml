@@ -12,6 +12,8 @@
     mode: u+rwx
   when: not pihole_installed
 
+# currently unattended install not working
+# needs config to be deployed first
 - name: run install script
   shell: ~/pihole-install.sh --unattended
   when: not pihole_installed

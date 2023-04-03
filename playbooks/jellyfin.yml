@@ -1,0 +1,6 @@
+- name: jellyfin
+  hosts: jellyfin
+
+  roles:
+    - common
+    - jellyfin
