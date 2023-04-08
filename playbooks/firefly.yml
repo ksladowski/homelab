@@ -1,0 +1,10 @@
+- name: firefly
+  hosts: firefly
+
+  roles:
+    - common
+    - apache
+    - postgres
+    - php
+    - redis
+    - firefly

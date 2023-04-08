@@ -1,0 +1,6 @@
+- name: postgres
+  hosts: postgres
+
+  roles:
+    - common
+    - postgres

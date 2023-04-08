@@ -16,4 +16,6 @@ all:
         jellyfin:
           ansible_host: 192.168.1.143
         firefly:
-          ansible_host: 192.168.1.141
+          ansible_host: 192.168.1.199
+        postgres:
+          ansible_host: 192.168.1.185
