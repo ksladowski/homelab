@@ -34,3 +34,7 @@
   become: true
   become_user: postgres
   notify: restart postgres
+
+# Execute restart handler right away
+- name: Flush handlers
+  meta: flush_handlers

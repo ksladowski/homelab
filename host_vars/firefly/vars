@@ -1,5 +1,5 @@
 ---
-owner_email: kevin@sladnet.xyz
+owner_email: "{{ vault_owner_email }}"
 db_name: firefly
 db_user: firefly
 db_password: "{{ vault_db_password }}"

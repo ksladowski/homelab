@@ -28,12 +28,14 @@
   ansible.builtin.template:
     src: .env.j2
     dest: /var/www/html/firefly-iii/.env
+  notify: restart apache
 
 # What's changed from default? Document root and allow access to files in /var/www/html
 - name: Deploy apache config
   ansible.builtin.copy:
     src: httpd.conf
     dest: /etc/httpd/conf/httpd.conf
+  notify: restart apache
 
 - name: Init database (1/3)
   ansible.builtin.command:
@@ -41,6 +43,7 @@
     cmd: "php82 artisan migrate:refresh --seed"
   become: true
   become_user: apache  
+  notify: restart apache
 
 - name: Init database (2/3)
   ansible.builtin.command:
@@ -48,6 +51,7 @@
     cmd: "php82 artisan firefly-iii:upgrade-database"
   become: true
   become_user: apache  
+  notify: restart apache
 
 - name: Init database (3/3)
   ansible.builtin.command:
@@ -55,3 +59,4 @@
     cmd: "php82 artisan passport:install"
   become: true
   become_user: apache 
+  notify: restart apache
