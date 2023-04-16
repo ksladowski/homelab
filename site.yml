@@ -1,3 +1,2 @@
 ---
-- import_playbook: ./playbooks/netbox.yml
-- import_playbook: ./playbooks/traefik.yml
+- import_playbook: ./playbooks/common.yml
