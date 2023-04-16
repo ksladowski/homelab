@@ -1,0 +1,6 @@
+public_url: "{{ vault_public_url }}"
+jwt_secret: "{{ vault_jwt_secret }}"
+admin_password: "{{ vault_admin_password }}"
+db_name: lldap
+db_user: lldap
+db_password: "{{ vault_db_password }}"

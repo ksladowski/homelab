@@ -1,0 +1,7 @@
+- name: authelia
+  hosts: authelia
+
+  roles:
+    - common
+    #- postgres
+    - authelia

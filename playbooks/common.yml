@@ -1,0 +1,5 @@
+- name: common
+  hosts: template
+
+  roles:
+    - common

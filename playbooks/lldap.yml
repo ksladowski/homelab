@@ -1,0 +1,7 @@
+- name: lldap
+  hosts: lldap
+
+  roles:
+    - common
+    - postgres
+    - lldap

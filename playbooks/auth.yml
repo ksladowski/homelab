@@ -1,6 +1,0 @@
-- name: auth
-  hosts: auth
-
-  roles:
-    - common
-    - auth

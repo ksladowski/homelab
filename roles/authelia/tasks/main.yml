@@ -1,0 +1,38 @@
+---
+- name: Create group for authelia
+  ansible.builtin.group:
+    name: authelia
+    system: true
+
+- name: Create user for authelia
+  ansible.builtin.user:
+    name: authelia
+    group: authelia
+    system: true
+    create_home: false
+
+- name: Create /usr/bin/authelia
+  ansible.builtin.file:
+    path: /usr/bin/authelia
+    state: directory
+
+- name: Install authelia
+  ansible.builtin.unarchive:
+    src: https://github.com/authelia/authelia/releases/download/v4.37.5/authelia-v4.37.5-linux-amd64.tar.gz
+    dest: /usr/bin/authelia
+    remote_src: true
+    group: authelia
+    owner: authelia
+    extra_opts: [authelia-linux-amd64]
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    src: authelia.service
+    dest: /etc/systemd/system/authelia.service
+
+- name: Start/enable lldap service
+  ansible.builtin.systemd:
+    name: lldap.service
+    state: started
+    enabled: true
+    daemon_reload: true
