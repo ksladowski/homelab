@@ -1,5 +1,16 @@
-- name: "Ensure system up to date"
-  import_tasks: update.yml
+---
+- name: upgrade all packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  become: true
+  notify: reboot
 
-- name: "Enable ssh access via 'admin' user"
-  import_tasks: admin.yml
+- name: "Install required packages for python/pip"
+  ansible.builtin.dnf:
+    name: "{{item}}"
+    state: latest
+  become: true
+  with_items: 
+    - python-setuptools
+    - python-pip
