@@ -1,0 +1,16 @@
+metal:
+  hosts:
+    proxmox:
+vms:
+  hosts:
+    truenas:
+    jarvis:
+containers:
+  hosts:
+    authelia:
+    jellyfin:
+    lldap:
+    pihole:
+    firefly:
+    traefik:
+    netbox:
