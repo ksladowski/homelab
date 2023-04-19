@@ -1,9 +1,9 @@
 ---
 http:
   routers:
-    proxmox:
-      rule: Host(`proxmox.sladnet.xyz`)
-      service: proxmox
+    omv:
+      rule: Host(`truenas.sladnet.xyz`)
+      service: truenas
       tls:
         certResolver: letsencrypt
         domains:
@@ -11,7 +11,7 @@ http:
             sans:
               - "*.sladnet.xyz"
   services:
-      proxmox:
+      omv:
         loadBalancer:
           servers:
-            - url: "https://192.168.1.2:8006"
+            - url: "http://{{hostvars.truenas.ansible_host}}"

@@ -15,7 +15,7 @@ ldap_port = 3890
 http_port = 17170
 
 ## The public URL of the server, for password reset links.
-http_url = "{{ public_url }}"
+http_url = "https://lldap.sladnet.xyz"
 
 ## Random secret for JWT signature.
 ## This secret should be random, and should be shared with application
@@ -28,7 +28,7 @@ http_url = "{{ public_url }}"
 ## in the LLDAP_JWT_SECRET_FILE environment variable
 ## You can generate it with (on linux):
 ## LC_ALL=C tr -dc 'A-Za-z0-9!#%&'\''()*+,-./:;<=>?@[\]^_{|}~' </dev/urandom | head -c 32; echo ''
-jwt_secret = "{{jwt_secret}}"
+jwt_secret = "{{ jwt_secret }}"
 
 ## Base DN for LDAP.
 ## This is usually your domain name, and is used as a
@@ -37,7 +37,7 @@ jwt_secret = "{{jwt_secret}}"
 ## The sample value is for "example.com", but you can extend it with as
 ## many "dc" as you want, and you don't actually need to own the domain
 ## name.
-ldap_base_dn = "dc=example,dc=com"
+ldap_base_dn = "dc=sladnet,dc=xyz"
 
 ## Admin username.
 ## For the LDAP interface, a value of "admin" here will create the LDAP
@@ -88,20 +88,20 @@ database_url = "postgres://lldap:{{ db_password }}@localhost/lldap"
 ## (example with "password"): LLDAP_SMTP_OPTIONS__PASSWORD
 #[smtp_options]
 ## Whether to enabled password reset via email, from LLDAP.
-#enable_password_reset=true
+enable_password_reset=true
 ## The SMTP server.
-#server="smtp.gmail.com"
+server="smtp.mailbox.org"
 ## The SMTP port.
-#port=587
+port=587
 ## How the connection is encrypted, either "NONE" (no encryption), "TLS" or "STARTTLS".
-#smtp_encryption = "TLS"
+smtp_encryption = "STARTTLS"
 ## The SMTP user, usually your email address.
-#user="sender@gmail.com"
+user="{{ smtp_email }}"
 ## The SMTP password.
-#password="password"
+password="{{ smtp_password }}"
 ## The header field, optional: how the sender appears in the email. The first
 ## is a free-form name, followed by an email between <>.
-#from="LLDAP Admin <sender@gmail.com>"
+from="LLDAP Admin <lldap@sladnet.xyz>"
 ## Same for reply-to, optional.
 #reply_to="Do not reply <noreply@localhost>"
 

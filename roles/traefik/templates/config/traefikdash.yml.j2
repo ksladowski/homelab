@@ -1,9 +1,9 @@
 ---
 http:
   routers:
-    omv:
-      rule: Host(`omv.sladnet.xyz`)
-      service: omv
+    traefik:
+      rule: Host(`traefik.sladnet.xyz`)
+      service: traefik
       tls:
         certResolver: letsencrypt
         domains:
@@ -11,7 +11,7 @@ http:
             sans:
               - "*.sladnet.xyz"
   services:
-      omv:
+      traefik:
         loadBalancer:
           servers:
-            - url: "http://192.168.1.213"
+            - url: "http://{{ansible_host}}:8080"

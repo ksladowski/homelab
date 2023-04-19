@@ -3,6 +3,7 @@
   ansible.builtin.group:
     name: lldap
     system: true
+  become: true
 
 - name: Create user for lldap
   ansible.builtin.user:
@@ -10,11 +11,15 @@
     group: lldap
     system: true
     create_home: false
+  become: true
 
 - name: Create /opt/nitnelave
   ansible.builtin.file:
     path: /opt/nitnelave
     state: directory
+    owner: lldap
+    group: lldap
+  become: true
 
 - name: Install lldap
   ansible.builtin.unarchive:
@@ -24,17 +29,22 @@
     group: lldap
     owner: lldap
     extra_opts: [--strip-components=1]  # otherwise extracts into /opt/nitnelave/amd64-lldap/
+  become: true
+  become_user: lldap
 
 - name: Deploy config
   ansible.builtin.template:
     src: lldap_config.toml.j2
     dest: /opt/nitnelave/lldap_config.toml
+  become: true
+  become_user: lldap
   notify: restart lldap
 
 - name: Install lldap service
   ansible.builtin.copy:
     src: lldap.service
     dest: /etc/systemd/system/lldap.service
+  become: true
   
 - name: Start/enable lldap service
   ansible.builtin.systemd:
@@ -42,3 +52,4 @@
     state: started
     enabled: true
     daemon_reload: true
+  become: true

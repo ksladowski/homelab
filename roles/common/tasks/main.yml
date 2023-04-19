@@ -14,3 +14,11 @@
   with_items: 
     - python-setuptools
     - python-pip
+
+- name: General utilities for most hosts
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: latest
+  become: true
+  with_items:
+    - tar

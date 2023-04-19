@@ -1,16 +1,23 @@
 metal:
   hosts:
     proxmox:
+      ansible_host: 192.168.1.2
 vms:
   hosts:
     truenas:
+      ansible_host: 192.168.1.140
     jarvis:
 containers:
   hosts:
-    authelia:
     jellyfin:
     lldap:
     pihole:
-    firefly:
     traefik:
+    authelia:
+    firefly:
     netbox:
+
+smtp:
+  hosts:
+    lldap:
+    firefly:

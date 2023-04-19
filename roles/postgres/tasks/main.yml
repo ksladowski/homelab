@@ -1,3 +1,4 @@
+---
 - name: "Install required packages"
   import_tasks: install.yml
 
@@ -6,3 +7,4 @@
 
 - name: "Create database for required application"
   import_tasks: create_db.yml
+  

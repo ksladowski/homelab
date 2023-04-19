@@ -1,4 +1,4 @@
-public_url: "{{ vault_public_url }}"
+ansible_host: 192.168.1.138
 jwt_secret: "{{ vault_jwt_secret }}"
 admin_password: "{{ vault_admin_password }}"
 db_name: lldap

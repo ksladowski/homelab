@@ -4,6 +4,7 @@
     src: https://github.com/traefik/traefik/releases/download/v2.9.9/traefik_v2.9.9_linux_amd64.tar.gz
     dest: /usr/local/bin
     remote_src: true
+  become: true
   notify:
     - restart traefik
 
@@ -11,6 +12,7 @@
   ansible.builtin.group:
     name: traefik
     state: present
+  become: true
 
 - name: Create Traefik user
   ansible.builtin.user:
@@ -19,31 +21,47 @@
     shell: /sbin/nologin
     state: present
     create_home: false
+  become: true
 
 - name: Set port binding capability on Traefik
   community.general.capabilities:
     path: /usr/local/bin/traefik
     capability: cap_net_bind_service+ep
     state: present
+  become: true
 
 - name: Create /etc/traefik
-  file:
+  ansible.builtin.file:
     path: /etc/traefik
     state: directory
+    group: traefik
+    owner: traefik
+  become: true
 
 - name: touch acme.json
-  file:
+  ansible.builtin.file:
     path: /etc/traefik/acme.json
     group: traefik
     owner: traefik
     mode: "600"
     state: touch
+  become: true
+  become_user: traefik
 
-- name: Copy Traefik config
-  ansible.builtin.copy:
-    src: config
-    dest: /etc/traefik/
+- name: Copy proxy configs
+  ansible.builtin.template:
+    src: "config/{{ item }}.yml.j2"
+    dest: "/etc/traefik/{{ item }}.yml"
     mode: "0755"
+  become: true
+  become_user: traefik
+  with_items:
+    - jellyfin
+    - pihole
+    - proxmox
+    - traefikdash
+    - truenas
+
   notify:
     - restart traefik
 
@@ -52,6 +70,8 @@
     src: traefik.yml.j2
     dest: /etc/traefik/traefik.yml
     mode: "0644"
+  become: true
+  become_user: traefik
   notify:
     - restart traefik
 
@@ -60,5 +80,6 @@
     src: traefik.service.j2
     dest: /etc/systemd/system/traefik.service
     mode: "0644"
+  become: true
   notify:
     - restart traefik

@@ -1,0 +1,2 @@
+smtp_email: "{{ vault_smtp_email }}"
+smtp_password: "{{ vault_smtp_password }}"
