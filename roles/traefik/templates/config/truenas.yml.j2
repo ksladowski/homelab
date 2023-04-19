@@ -1,7 +1,7 @@
 ---
 http:
   routers:
-    omv:
+    truenas:
       rule: Host(`truenas.sladnet.xyz`)
       service: truenas
       tls:
@@ -11,7 +11,7 @@ http:
             sans:
               - "*.sladnet.xyz"
   services:
-      omv:
+      truenas:
         loadBalancer:
           servers:
             - url: "http://{{hostvars.truenas.ansible_host}}"

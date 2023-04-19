@@ -48,10 +48,19 @@
   become: true
   become_user: traefik
 
+- name: Create /etc/traefik/config
+  ansible.builtin.file:
+    path: /etc/traefik/config
+    state: directory
+    group: traefik
+    owner: traefik
+  become: true
+  become_user: traefik
+
 - name: Copy proxy configs
   ansible.builtin.template:
     src: "config/{{ item }}.yml.j2"
-    dest: "/etc/traefik/{{ item }}.yml"
+    dest: "/etc/traefik/config/{{ item }}.yml"
     mode: "0755"
   become: true
   become_user: traefik
