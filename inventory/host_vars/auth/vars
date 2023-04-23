@@ -1,0 +1,5 @@
+ansible_host: 192.168.1.169
+jwt_secret: "{{ vault_jwt_secret }}"
+lldap_admin_password: "{{ vault_lldap_admin_password }}"
+lldap_db_password: "{{ vault_lldap_db_password }}"
+authelia_db_password: "{{ vault_authelia_db_password }}"

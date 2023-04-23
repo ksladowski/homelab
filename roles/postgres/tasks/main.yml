@@ -1,10 +1,46 @@
 ---
-- name: "Install required packages"
-  import_tasks: install.yml
+- name: "Create app database"
+  community.general.postgresql_db:
+    state: present
+    name: "{{ db_name }}"
+  become: true
+  become_user: postgres
+  delegate_to: postgres
 
-- name: "Initialize PostgreSQL"
-  import_tasks: init.yml
+- name: "Create db user"
+  community.general.postgresql_user:
+    state: present
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+  become: true
+  become_user: postgres
+  delegate_to: postgres
 
-- name: "Create database for required application"
-  import_tasks: create_db.yml
-  
+- name: "Grant db user access to app db"
+  community.general.postgresql_privs:
+    type: database
+    database: "{{ db_name }}"
+    roles: "{{ db_user }}"
+    grant_option: no
+    privs: all
+  become: true
+  become_user: postgres
+  delegate_to: postgres
+
+- name: "Allow md5 connection for the db user"
+  community.general.postgresql_pg_hba:
+    dest: "~/data/pg_hba.conf"
+    contype: host
+    databases: "{{ db_name }}"
+    address: "{{ ansible_host }}"
+    method: md5
+    users: "{{ db_user }}"
+    create: true
+  become: true
+  become_user: postgres
+  notify: restart postgres
+  delegate_to: postgres
+
+# Execute restart handler right away
+- name: Flush handlers
+  meta: flush_handlers

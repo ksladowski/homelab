@@ -1,0 +1,20 @@
+verbose=false
+
+ldap_port = 3890
+http_port = 17170
+http_url = "https://lldap.sladnet.xyz"
+
+jwt_secret = "{{ jwt_secret }}"
+ldap_base_dn = "dc=sladnet,dc=xyz"
+ldap_user_dn = "admin"
+ldap_user_pass = "{{ lldap_admin_password }}"
+
+database_url = "postgres://lldap:{{ lldap_db_password }}@{{ hostvars['postgres'].ansible_host }}:5432/lldap"
+
+enable_password_reset=true
+server="smtp.mailbox.org"
+port=587
+smtp_encryption = "STARTTLS"
+user="{{ smtp_email }}"
+password="{{ smtp_password }}"
+from="LLDAP Admin <lldap@sladnet.xyz>"

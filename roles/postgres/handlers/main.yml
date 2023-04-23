@@ -2,3 +2,5 @@
   systemd:
     name: postgresql
     state: restarted
+  become: true
+  delegate_to: postgres
