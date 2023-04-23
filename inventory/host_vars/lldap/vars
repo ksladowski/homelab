@@ -1,6 +1,0 @@
-ansible_host: 192.168.1.138
-jwt_secret: "{{ vault_jwt_secret }}"
-admin_password: "{{ vault_admin_password }}"
-db_name: lldap
-db_user: lldap
-db_password: "{{ vault_db_password }}"

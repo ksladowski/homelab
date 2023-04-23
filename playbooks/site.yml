@@ -1,5 +1,5 @@
 - name: common
-  hosts: template
+  hosts: all
 
   roles:
     - common

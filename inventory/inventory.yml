@@ -10,15 +10,19 @@ vms:
 containers:
   hosts:
     jellyfin:
-    lldap:
+      ansible_host: 192.168.1.158
+    auth:
     pihole:
     traefik:
     authelia:
+      ansible_host: 192.168.1.175
     firefly:
     netbox:
+    postgres:
+      ansible_host: 192.168.1.118
     qbit:
 
 smtp:
   hosts:
-    lldap:
+    auth:
     firefly:

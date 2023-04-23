@@ -1,0 +1,54 @@
+---
+- name: Main postgres database
+  hosts: postgres
+
+  roles:
+    - common
+
+  tasks:
+    - name: "Install postgres"
+      dnf:
+        name: 
+          - postgresql
+          - postgresql-server
+        state: present
+      become: true
+
+    - name: "Install pip packages to talk to postgres"
+      pip:
+        name:
+          - psycopg2-binary
+        state: present
+      become: true
+
+    - name: "find out if postgresql is initialized"
+      ansible.builtin.stat:
+        path: "/var/lib/pgsql/data/pg_hba.conf"
+      become: true
+      register: postgres_data
+
+    - name: "initialize postgresql"
+      shell: "postgresql-setup initdb"
+      become: true
+      when: not postgres_data.stat.exists
+
+    - name: Allow connections on all interfaces
+      community.postgresql.postgresql_set:
+        name: listen_addresses
+        value: '*'
+      become: true
+      become_user: postgres
+      register: listen_if
+
+    - name: "start and enable services"
+      service: "name={{ item }} state=started enabled=yes"
+      become: true
+      with_items:
+        - postgresql
+
+    - name: "Restart postgres"
+      ansible.builtin.systemd:
+        name: postgresql
+        state: restarted
+      become: true
+      when: listen_if.changed

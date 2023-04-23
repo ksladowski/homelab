@@ -1,0 +1,14 @@
+---
+- name: Create group
+  ansible.builtin.group:
+    name: "{{ systemuser_name }}"
+    system: true
+  become: true
+
+- name: Create user
+  ansible.builtin.user:
+    name: "{{ systemuser_name }}"
+    group: "{{ systemuser_name }}"
+    system: true
+    create_home: false
+  become: true

@@ -1,0 +1,14 @@
+- name: Auth server
+  hosts: auth
+
+  roles:
+    - common
+  
+  tasks:
+    - name: Setup lldap
+      ansible.builtin.include_tasks:
+        file: lldap.yml
+
+    - name: Setup authelia
+      ansible.builtin.include_tasks:
+        file: authelia.yml

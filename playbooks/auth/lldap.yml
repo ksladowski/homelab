@@ -1,18 +1,18 @@
 ---
-- name: Create group for lldap
-  ansible.builtin.group:
-    name: lldap
-    system: true
-  become: true
+- name: Create database for lldap
+  ansible.builtin.include_role:
+    name: postgres
+  vars:
+    db_name: "lldap"
+    db_user: "lldap"
+    db_password: "{{ lldap_db_password }}"
 
-- name: Create user for lldap
-  ansible.builtin.user:
-    name: lldap
-    group: lldap
-    system: true
-    create_home: false
-  become: true
-
+- name: Create user/group for lldap
+  ansible.builtin.include_role:
+    name: systemuser
+  vars:
+    systemuser_name: "lldap"
+    
 - name: Create /opt/nitnelave
   ansible.builtin.file:
     path: /opt/nitnelave
@@ -38,7 +38,7 @@
     dest: /opt/nitnelave/lldap_config.toml
   become: true
   become_user: lldap
-  notify: restart lldap
+  register: lldap_config
 
 - name: Install lldap service
   ansible.builtin.copy:
@@ -53,3 +53,10 @@
     enabled: true
     daemon_reload: true
   become: true
+
+- name: restart lldap
+  ansible.builtin.systemd:
+    name: lldap
+    state: restarted
+  become: true
+  when: lldap_config.changed

@@ -1,9 +1,9 @@
 ---
 http:
   routers:
-    truenas:
-      rule: Host(`truenas.sladnet.xyz`)
-      service: truenas
+    jellyfin:
+      rule: Host(`jellyfin.sladnet.xyz`)
+      service: jellyfin
       tls:
         certResolver: letsencrypt
         domains:
@@ -11,7 +11,7 @@ http:
             sans:
               - "*.sladnet.xyz"
   services:
-      truenas:
+      jellyfin:
         loadBalancer:
           servers:
-            - url: "http://{{hostvars.truenas.ansible_host}}"
+            - url: "http://{{hostvars.jellyfin.ansible_host}}:"
