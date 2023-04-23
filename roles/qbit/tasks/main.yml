@@ -1,0 +1,18 @@
+---
+- name: Install/enable epel
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+    state: present
+  with_items:
+    - epel-release
+  become: true
+
+- name: Install qbittorrent-nox
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    disable_gpg_check: true
+    state: present
+  with_items:
+    - qbittorrent-nox
+  become: true

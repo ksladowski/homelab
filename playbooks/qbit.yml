@@ -1,0 +1,6 @@
+- name: qbit
+  hosts: qbit
+
+  roles:
+    - common
+    - qbit
