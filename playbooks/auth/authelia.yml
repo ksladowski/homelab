@@ -21,12 +21,11 @@
 
 - name: Install authelia
   ansible.builtin.unarchive:
-    src: https://github.com/authelia/authelia/releases/download/v4.37.5/authelia-v4.37.5-linux-amd64.tar.gz
+    src: https://github.com/authelia/authelia/releases/download/v4.37.2/authelia-v4.37.2-linux-amd64.tar.gz
     dest: /usr/bin/authelia
     remote_src: true
     group: authelia
     owner: authelia
-    extra_opts: [authelia-linux-amd64]
   become: true
 
 - name: Copy systemd service
