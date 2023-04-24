@@ -60,3 +60,10 @@
     state: restarted
   become: true
   when: lldap_config.changed
+
+- name: Deploy proxy config
+  ansible.builtin.include_role:
+    name: traefik
+  vars:
+    traefik_service: lldap
+    app_port: 17170

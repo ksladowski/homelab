@@ -17,6 +17,7 @@
   ansible.builtin.file:
     path: /usr/bin/authelia
     state: directory
+  become: true
 
 - name: Install authelia
   ansible.builtin.unarchive:
@@ -26,11 +27,31 @@
     group: authelia
     owner: authelia
     extra_opts: [authelia-linux-amd64]
+  become: true
 
 - name: Copy systemd service
   ansible.builtin.copy:
     src: authelia.service
     dest: /etc/systemd/system/authelia.service
+  become: true
+
+- name: Create /etc/authelia
+  ansible.builtin.file:
+    path: /etc/authelia
+    state: directory
+    owner: authelia
+    group: authelia
+  become: true
+
+- name: Deploy config
+  ansible.builtin.template:
+    src: authelia_config.yml.j2
+    dest: /etc/authelia/configuration.yml
+    group: authelia
+    owner: authelia
+    mode: 0600
+  become: true
+  become_user: authelia
 
 - name: Start/enable authelia
   ansible.builtin.systemd:
@@ -38,3 +59,11 @@
     state: started
     enabled: true
     daemon_reload: true
+  become: true
+
+- name: Deploy proxy config
+  ansible.builtin.include_role:
+    name: traefik
+  vars:
+    traefik_service: authelia
+    app_port: 9091

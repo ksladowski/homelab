@@ -1,9 +1,9 @@
 ---
 http:
   routers:
-    jellyfin:
-      rule: Host(`jellyfin.sladnet.xyz`)
-      service: jellyfin
+    {{ traefik_service }}:
+      rule: Host(`{{ traefik_service }}.sladnet.xyz`)
+      service: {{ traefik_service }}
       tls:
         certResolver: letsencrypt
         domains:
@@ -11,7 +11,7 @@ http:
             sans:
               - "*.sladnet.xyz"
   services:
-      jellyfin:
+      {{ traefik_service }}:
         loadBalancer:
           servers:
-            - url: "http://{{hostvars.jellyfin.ansible_host}}:"
+            - url: "http://{{ ansible_host }}:{{ app_port }}"

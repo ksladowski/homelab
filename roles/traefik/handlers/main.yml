@@ -1,13 +1,8 @@
-- name: start traefik
-  systemd:
-    name: traefik
-    state: started
-    enabled: true
-  become: true
-
+---
 - name: restart traefik
-  systemd:
+  ansible.builtin.systemd:
     name: traefik
     state: restarted
     daemon_reload: true
   become: true
+  delegate_to: traefik

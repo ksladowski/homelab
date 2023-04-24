@@ -3,6 +3,7 @@
 
   roles:
     - common
+    - redis
   
   tasks:
     - name: Setup lldap
