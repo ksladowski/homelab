@@ -1,10 +1,10 @@
 ---
-- name: install apache
+- name: Install apache
   ansible.builtin.dnf:
     name: httpd
-    state: latest
+    state: present
 
-- name: start and enable service
+- name: Start and enable service
   ansible.builtin.systemd:
     name: httpd
     state: started

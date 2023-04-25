@@ -1,14 +1,14 @@
+---
 - name: Install remirepo
   ansible.builtin.dnf:
     name: "{{ item }}"
-    state: latest
+    state: present
     disable_gpg_check: true
   with_items:
-    - epel-next-release
+    - epel-release
     - https://rpms.remirepo.net/enterprise/remi-release-9.rpm
 
-
-# this is for firefly. If another lamp stack is needed, move packages to firefly as needed
+## this is for firefly. If another lamp stack is needed, move packages to firefly as needed
 - name: Install required packages
   ansible.builtin.dnf:
     name: "{{ item }}"

@@ -1,24 +1,25 @@
 ---
-- name: upgrade all packages
+- name: System update
   ansible.builtin.dnf:
     name: "*"
     state: latest
+    update_only: true
   become: true
   notify: reboot
 
-- name: "Install required packages for python/pip"
+- name: Install required packages for python/pip
   ansible.builtin.dnf:
-    name: "{{item}}"
-    state: latest
+    name:
+      - python-setuptools
+      - python-pip
+    state: present
   become: true
-  with_items: 
-    - python-setuptools
-    - python-pip
 
 - name: General utilities for most hosts
   ansible.builtin.dnf:
-    name: "{{ item }}"
-    state: latest
+    name:
+      - tar
+    state: present
   become: true
   with_items:
     - tar

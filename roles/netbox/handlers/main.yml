@@ -1,2 +1,0 @@
-- name: netbox upgrade script
-  command: sh /opt/netbox/upgrade.sh

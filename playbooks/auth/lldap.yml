@@ -12,13 +12,14 @@
     name: systemuser
   vars:
     systemuser_name: "lldap"
-    
+
 - name: Create /opt/nitnelave
   ansible.builtin.file:
     path: /opt/nitnelave
     state: directory
     owner: lldap
     group: lldap
+    mode: '600'
   become: true
 
 - name: Install lldap
@@ -29,6 +30,7 @@
     group: lldap
     owner: lldap
     extra_opts: [--strip-components=1]  # otherwise extracts into /opt/nitnelave/amd64-lldap/
+    mode: '700'
   become: true
   become_user: lldap
 
@@ -38,6 +40,7 @@
     dest: /opt/nitnelave/lldap_config.toml
   become: true
   become_user: lldap
+  mode: '600'
   register: lldap_config
 
 - name: Install lldap service
@@ -45,7 +48,7 @@
     src: lldap.service
     dest: /etc/systemd/system/lldap.service
   become: true
-  
+
 - name: Start/enable lldap service
   ansible.builtin.systemd:
     name: lldap.service

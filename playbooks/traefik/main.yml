@@ -2,7 +2,7 @@
 - name: Traefik reverse proxy
   hosts: traefik
 
-  roles: 
+  roles:
     - common
 
   tasks:
@@ -19,7 +19,7 @@
         name: systemuser
       vars:
         systemuser_name: "traefik"
-        
+
     - name: Set port binding capability on Traefik
       community.general.capabilities:
         path: /usr/local/bin/traefik
@@ -33,14 +33,15 @@
         state: directory
         group: traefik
         owner: traefik
+        mode: '600'
       become: true
 
-    - name: touch acme.json
+    - name: Touch acme.json
       ansible.builtin.file:
         path: /etc/traefik/acme.json
         group: traefik
         owner: traefik
-        mode: "600"
+        mode: '600'
         state: touch
       become: true
       become_user: traefik
@@ -51,6 +52,7 @@
         state: directory
         group: traefik
         owner: traefik
+        mode: '600'
       become: true
 
     - name: Create Traefik config file
@@ -60,7 +62,7 @@
         mode: "0644"
       become: true
       become_user: traefik
-      register: restart_needed
+      notify: Restart traefik
 
     ## Eventually this should be moved to use traefik role
     - name: Copy proxy configs
@@ -74,7 +76,7 @@
         - proxmox
         - dashboard
         - truenas
-      register: restart_needed
+      notify: Restart traefik
 
     - name: Copy systemd service file to server
       ansible.builtin.template:
@@ -82,12 +84,12 @@
         dest: /etc/systemd/system/traefik.service
         mode: "0644"
       become: true
-      register: restart_needed
+      notify: Restart traefik
 
-    - name: restart traefik
+  handlers:
+    - name: Restart traefik
       ansible.builtin.systemd:
         name: traefik
         state: restarted
         daemon_reload: true
       become: true
-      when: restart_needed.changed

@@ -1,0 +1,131 @@
+---
+- name: Netbox
+  hosts: netbox
+
+  roles:
+    - common
+    - systemuser
+    - postgres
+    - redis
+    - nginx
+
+  tasks:
+    - name: Create database for netbox
+      ansible.builtin.include_role:
+        name: postgres
+      vars:
+        db_name: netbox
+        db_user: netbox
+        db_password: "{{ netbox_db_password }}"
+
+    - name: Create user/group for netbox
+      ansible.builtin.include_role:
+        name: systemuser
+      vars:
+        systemuser_name: netbox
+
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - git
+        - gcc
+        - libxml2-devel
+        - libxslt-devel
+        - libffi-devel
+        - libpq-devel
+        - openssl-devel
+        - redhat-rpm-config
+
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /opt/netbox
+        state: directory
+        owner: netbox
+        group: netbox
+        mode: '700'
+      become: true
+      become_user: netbox
+
+    - name: Clone netbox repo
+      ansible.builtin.git:
+        repo: "https://github.com/netbox-community/netbox.git"
+        dest: /opt/netbox
+        depth: 1
+        single_branch: true
+        version: master
+      become: true
+      become_user: netbox
+      notify: Netbox upgrade script
+
+    - name: Deploy configuration.py
+      ansible.builtin.template:
+        src: netbox_config.py.j2
+        dest: /opt/netbox/netbox/netbox/configuration.py
+        owner: netbox
+        group: netbox
+        mode: '700'
+      become: true
+      become_user: netbox
+
+    # at this point, do the following to activate the virtual environment and create a superuser.
+    #
+    # source /opt/netbox/venv/bin/activate
+    # cd /opt/netbox/netbox
+    # python3 manage.py createsuperuser
+
+    - name: Set up housekeeping cron job
+      ansible.builtin.cron:
+        name: netbox-housekeeping
+        job: /opt/netbox/contrib/netbox-housekeeping.sh
+        hour: 0
+        minute: 0
+      become: true
+
+    ## not currently worried about making changes to this
+    - name: Copy default gunicorn config
+      ansible.builtin.copy:
+        src: /opt/netbox/contrib/gunicorn.py
+        dest: /opt/netbox/gunicorn.py
+        remote_src: true
+        mode: '700'
+      become: true
+      become_user: netbox
+
+    - name: Install included systemd services
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /etc/systemd/system/
+        remote_src: true
+        mode: '700'
+      with_items:
+        - /opt/netbox/contrib/netbox.service
+        - /opt/netbox/contrib/netbox-rq.service
+      become: true
+
+    - name: Enable required services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+        daemon_reload: true
+      with_items:
+        - netbox
+        - netbox-rq
+
+    - name: Copy site config to nginx directory
+      ansible.builtin.copy:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: nginx
+        group: nginx
+        mode: '660'
+      become: true
+      notify: Restart nginx
+
+  handlers:
+    - name: Netbox upgrade script
+      ansible.builtin.command: sh /opt/netbox/upgrade.sh
+      become: true
+      become_user: netbox

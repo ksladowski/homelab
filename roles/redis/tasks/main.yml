@@ -1,13 +1,13 @@
 ---
-- name: "Install packages"
+- name: Install packages
   ansible.builtin.dnf:
     name: redis
-    state: latest
+    state: present
   become: true
 
-- name: "Start and enable services"
+- name: Start and enable services
   ansible.builtin.systemd:
     name: redis
     state: started
-    enabled: yes
+    enabled: true
   become: true

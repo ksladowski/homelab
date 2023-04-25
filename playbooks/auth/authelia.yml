@@ -17,6 +17,9 @@
   ansible.builtin.file:
     path: /usr/bin/authelia
     state: directory
+    owner: authelia
+    group: authelia
+    mode: '600'
   become: true
 
 - name: Install authelia
@@ -48,7 +51,7 @@
     dest: /etc/authelia/configuration.yml
     group: authelia
     owner: authelia
-    mode: 0600
+    mode: '600'
   become: true
   become_user: authelia
 

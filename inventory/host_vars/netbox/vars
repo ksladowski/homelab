@@ -1,4 +1,2 @@
-db_name: netbox
-db_user: netbox
-db_password: "{{ vault_db_password }}"
+netbox_db_password: "{{ vault_db_password }}"
 secret_key: "{{ vault_secret_key }}"

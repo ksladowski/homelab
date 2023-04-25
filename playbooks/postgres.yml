@@ -6,31 +6,32 @@
     - common
 
   tasks:
-    - name: "Install postgres"
-      dnf:
-        name: 
-          - postgresql
-          - postgresql-server
+    - name: Install postgres
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      become: true
+      with_items:
+        - postgresql
+        - postgresql-server
+
+    - name: Install pip packages to talk to postgres
+      ansible.builtin.pip:
+        name: psycopg2-binary
         state: present
       become: true
 
-    - name: "Install pip packages to talk to postgres"
-      pip:
-        name:
-          - psycopg2-binary
-        state: present
-      become: true
-
-    - name: "find out if postgresql is initialized"
+    - name: Find out if postgresql is initialized
       ansible.builtin.stat:
         path: "/var/lib/pgsql/data/pg_hba.conf"
       become: true
       register: postgres_data
 
-    - name: "initialize postgresql"
-      shell: "postgresql-setup initdb"
+    - name: Initialize postgresql
+      ansible.builtin.command: "postgresql-setup initdb"
       become: true
       when: not postgres_data.stat.exists
+      changed_when: false
 
     - name: Allow connections on all interfaces
       community.postgresql.postgresql_set:
@@ -38,17 +39,18 @@
         value: '*'
       become: true
       become_user: postgres
-      register: listen_if
+      notify: Restart postgres
 
-    - name: "start and enable services"
-      service: "name={{ item }} state=started enabled=yes"
+    - name: Start and enable services
+      ansible.builtin.systemd:
+        name: postgresql
+        state: started
+        enabled: true
       become: true
-      with_items:
-        - postgresql
 
-    - name: "Restart postgres"
+  handlers:
+    - name: Restart postgres
       ansible.builtin.systemd:
         name: postgresql
         state: restarted
       become: true
-      when: listen_if.changed

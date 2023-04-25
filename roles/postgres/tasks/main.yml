@@ -1,5 +1,5 @@
 ---
-- name: "Create app database"
+- name: Create app database
   community.general.postgresql_db:
     state: present
     name: "{{ db_name }}"
@@ -7,7 +7,7 @@
   become_user: postgres
   delegate_to: postgres
 
-- name: "Create db user"
+- name: Create db user
   community.general.postgresql_user:
     state: present
     name: "{{ db_user }}"
@@ -16,18 +16,18 @@
   become_user: postgres
   delegate_to: postgres
 
-- name: "Grant db user access to app db"
+- name: Grant db user access to app db
   community.general.postgresql_privs:
     type: database
     database: "{{ db_name }}"
     roles: "{{ db_user }}"
-    grant_option: no
+    grant_option: false
     privs: all
   become: true
   become_user: postgres
   delegate_to: postgres
 
-- name: "Allow md5 connection for the db user"
+- name: Allow md5 connection for the db user
   community.general.postgresql_pg_hba:
     dest: "~/data/pg_hba.conf"
     contype: host
@@ -43,4 +43,4 @@
 
 # Execute restart handler right away
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers

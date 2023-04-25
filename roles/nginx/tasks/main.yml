@@ -1,25 +1,13 @@
-- name: "Install packages"
-  dnf:
+---
+- name: Install packages
+  ansible.builtin.dnf:
     name: nginx
-    state: latest
+    state: present
+  become: true
 
-- name: "Start and enable services"
-  systemd:
+- name: Start and enable services
+  ansible.builtin.systemd:
     name: nginx
     state: started
-    enabled: yes
-
-# - name: "Create sites-enabled and sites-available"
-#   file:
-#     path: "{{ item }}"
-#     state: directory
-#   with_items:
-#     - /etc/nginx/sites-available
-#     - /etc/nginx/sites-enabled
-
-# - name: "Include sites in nginx.conf"
-#   lineinfile:
-#     path: /etc/nginx/nginx.conf
-#     line: "include /etc/nginx/sites-enabled/*;"
-#     state: present
-#     insertbefore: "server {"
+    enabled: true
+  become: true
