@@ -7,6 +7,7 @@
   with_items:
     - epel-release
     - https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+  become: true
 
 ## this is for firefly. If another lamp stack is needed, move packages to firefly as needed
 - name: Install required packages
@@ -27,3 +28,4 @@
     - composer
     - unzip  # needed for installing (firefly) from composer
     - git
+  become: true

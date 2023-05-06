@@ -38,7 +38,7 @@
     create: true
   become: true
   become_user: postgres
-  notify: restart postgres
+  notify: Restart postgres
   delegate_to: postgres
 
 # Execute restart handler right away

@@ -3,9 +3,11 @@
   ansible.builtin.dnf:
     name: httpd
     state: present
+  become: true
 
 - name: Start and enable service
   ansible.builtin.systemd:
     name: httpd
     state: started
     enabled: true
+  become: true

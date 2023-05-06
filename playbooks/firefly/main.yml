@@ -17,11 +17,14 @@
         owner: apache
         group: apache
         mode: '775'
+      become: true
+      become_user: apache
 
     - name: "Find out if firefly is installed with compose"
       ansible.builtin.stat:
         path: "/var/www/html/firefly-iii/storage"
       register: ffcomposed
+      become: true
 
     - name: Install firefly with php compose
       community.general.composer:
@@ -32,7 +35,7 @@
         prefer_dist: true
         executable: /usr/bin/php82  # this is how remirepo installs it
       become: true
-      become_user: apache  # can't run composer as root
+      become_user: apache
       when: not ffcomposed.stat.exists
 
     - name: Deploy firefly config
@@ -43,6 +46,8 @@
         group: apache
         mode: '600'
       notify: Restart apache
+      become: true
+      become_user: apache
 
     # What's changed from default? Document root and allow access to files in /var/www/html
     - name: Deploy apache config
@@ -53,6 +58,8 @@
         group: apache
         mode: '600'
       notify: Restart apache
+      become: true
+      become_user: apache
 
     - name: Init database (1/3)
       ansible.builtin.command:

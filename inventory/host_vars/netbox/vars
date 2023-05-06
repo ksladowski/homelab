@@ -1,2 +1,6 @@
-netbox_db_password: "{{ vault_db_password }}"
+---
+db_name: netbox
+db_user: netbox
+traefik_service: netbox
+db_password: "{{ vault_db_password }}"
 secret_key: "{{ vault_secret_key }}"
