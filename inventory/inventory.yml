@@ -1,29 +1,6 @@
-metal:
-  hosts:
-    proxmox:
-      ansible_host: 192.168.1.2
-vms:
-  hosts:
-    truenas:
-      ansible_host: 192.168.1.140
-    jarvis:
 containers:
   hosts:
-    jellyfin:
-      ansible_host: 192.168.1.158
-    auth:
-    pihole:
-    traefik:
-    authelia:
-      ansible_host: 192.168.1.175
-    firefly:
-    netbox:
-    postgres:
-      ansible_host: 192.168.1.118
-    qbit:
-    immich:
-
-smtp:
+    actual:
+physical:
   hosts:
-    auth:
-    firefly:
+    icebox:

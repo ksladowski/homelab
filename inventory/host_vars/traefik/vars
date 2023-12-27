@@ -1,5 +1,0 @@
----
-ansible_host: 192.168.1.147
-acme_email: "{{ vault_acme_email }}"
-cloudflare_email: "{{ vault_cloudflare_email }}"
-cloudflare_dns_api_token: "{{ vault_cloudflare_dns_api_token }}"

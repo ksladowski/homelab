@@ -1,1 +1,0 @@
-authelia_secret: "{{ vault_authelia_secret }}"

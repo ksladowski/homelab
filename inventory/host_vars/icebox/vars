@@ -1,0 +1,4 @@
+ansible_host: 10.0.0.17
+
+api_token_name: "ansible@pam!ansible_token"
+api_token_secret: "{{ vault_api_token_secret }}"
