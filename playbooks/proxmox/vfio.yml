@@ -1,0 +1,40 @@
+# This is untested. 
+# I figure this will suffice for documentation until I 
+# actually need to set up a proxmox host again
+---
+- name: Remove default `GRUB_CMDLINE_LINUX_DEFAULT`
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
+    state: absent
+  # notify update grub. Need to add handler
+
+- name: Add new `GRUB_CMDLINE_LINUX_DEFAULT`
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    insertafter: # can't connect right now need to add later
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"'
+    state: present
+  # notify update grub. Need to add handler
+
+- name: Blacklist amdgpu drivers on host
+  ansible.builtin.lineinfile:
+    path: /etc/modprobe.d/blacklist.conf
+    line: '{{ item }}'
+    state: present
+  with_items: 
+    - 'blacklist amdgpu'
+    - 'blacklist radeon'
+
+- name: Add required kernel modules for vfio
+  ansible.builtin.lineinfile:
+    path: /etc/modules
+    line: '{{ item }}'
+    state: present
+  with_items:
+    - 'vfio'
+    - 'vfio_iommu_type1'
+    - 'vfio_pci'
+  # notify: reboot
+
+

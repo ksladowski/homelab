@@ -1,3 +1,4 @@
+---
 - name: Proxmox host - bootstrap as root
   hosts: icebox
   remote_user: root
