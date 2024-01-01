@@ -1,0 +1,15 @@
+# actual.service
+[Unit]
+Description=Actual
+After=network.target
+
+[Service]
+ExecStart=yarn start
+WorkingDirectory=/actual-server
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

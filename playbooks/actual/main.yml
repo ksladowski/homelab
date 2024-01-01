@@ -1,0 +1,76 @@
+---
+- name: Bootstrap container
+  hosts: actual
+  remote_user: root
+  roles:
+    - root_ansibleuser
+  tags:
+    - bootstrap
+
+# Root is used instead of a system user here. 
+# Ran into issues with yarn, dependencies, permissions, etc
+- name: Set up actualserver
+  hosts: actual
+  tags:
+    - main
+  tasks:
+    - name: Install prerequisite packages
+      ansible.builtin.apt:
+        name: '{{ item }}'
+        state: present
+      become: true
+      with_items:
+        - git
+        - nodejs
+        - npm
+
+    - name: Install yarn package
+      ansible.builtin.npm:
+        name: yarn
+        state: present
+        global: true
+      become: true
+      
+    - name: Clone actualserver git repo
+      ansible.builtin.git:
+        repo: 'https://github.com/actualbudget/actual-server.git'
+        dest: /actual-server
+        force: true
+      become: true
+      tags: update
+    
+    - name: Prompt user to run manual operation since yarn module is not working
+      ansible.builtin.pause:
+        prompt: "Manually run yarn install in that directory now if installing/updating"
+      tags: update
+
+    # This is commented out for the time being and must be performed manually.
+    # The yarn module utilizes a flag (--non-interactive) that is deprecated and throws an error
+    ####
+    #- name: Use yarn to install packages required by actual
+    #  community.general.yarn:
+    #    path: /actual-server
+    #  become: true
+    #  become_user: actual
+      
+    - name: Copy actual.service systemd service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/actual.service
+        src: actual.service
+        owner: root
+        group: root
+        mode: '755'
+      become: true
+
+    - name: Enable and start actual service
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+        enabled: true
+        state: restarted
+        name: actual
+      become: true
+  
+  handlers:
+    - name: handler_reboot
+      ansible.builtin.reboot:
+      become: true

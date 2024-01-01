@@ -1,3 +1,5 @@
+## Must login from console once and run the following command to allow connection as root
+## echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && systemctl restart sshd
 ---
 - name: Install sudo
   ansible.builtin.apt:
@@ -29,3 +31,11 @@
     group: root
     mode: 0440
   remote_user: root
+
+- name: Disallow connection as root
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "PermitRootLogin yes"
+    state: absent
+  remote_user: root
+  notify: handler_restart_sshd

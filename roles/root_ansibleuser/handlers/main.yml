@@ -1,0 +1,6 @@
+---
+- name: handler_restart_sshd
+  ansible.builtin.systemd:
+    name: sshd
+    state: restarted
+  remote_user: root
