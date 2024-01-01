@@ -1,0 +1,37 @@
+---
+- name: Install mariadb
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  become: true
+  with_items:
+    - mariadb-server
+    - python3-pymysql
+
+- name: start mariadb
+  ansible.builtin.systemd_service:
+    name: mariadb
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true
+
+- name: Create app database
+  community.mysql.mysql_db:
+    name: '{{ db_name }}'
+    state: present
+    login_unix_socket: '/run/mysqld/mysqld.sock'
+    check_implicit_admin: true
+  become: true
+
+
+- name: Create db user
+  community.mysql.mysql_user:
+    name: '{{ db_user }}'
+    password: '{{ db_password }}'
+    priv: '*.*:ALL'
+    host: 'localhost'
+    state: present
+    login_unix_socket: '/run/mysqld/mysqld.sock'
+    check_implicit_admin: true
+  become: true

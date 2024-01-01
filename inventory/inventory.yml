@@ -1,6 +1,11 @@
 containers:
   hosts:
     actual:
+    bookstack:
 physical:
   hosts:
     icebox:
+
+smtp:
+  hosts:
+    bookstack:

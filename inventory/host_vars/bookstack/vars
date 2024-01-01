@@ -1,0 +1,6 @@
+ansible_host: 10.0.0.19
+db_user: bookstack
+db_name: bookstack
+db_password: '{{ vault_db_password }}'
+bookstack_app_key: '{{ vault_bookstack_app_key }}'
+bookstack_url: "https://bookstack.sladnet.xyz"
