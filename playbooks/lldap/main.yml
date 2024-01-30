@@ -1,0 +1,55 @@
+# I think there was an issue creating the admin user.
+# I had to manually connect to postgres and remove admin user.
+# After restarting the service, it worked. 
+# Should be fine after the template changes I made.
+# I got it working and I'm going to hope I don't have to do it again
+---
+- name: Bootstrap container
+  hosts: lldap
+  remote_user: root
+  roles:
+    - root_ansibleuser
+  tags:
+    - bootstrap
+
+- name: Set up lldap
+  hosts: lldap
+  roles:
+    - postgres
+  tags:
+    - main
+  tasks:
+    - name: Download lldap deb
+      ansible.builtin.get_url:
+        dest: '/tmp/lldap.deb'
+        url: 'https://download.opensuse.org/repositories/home:/Masgalor:/LLDAP/Debian_12/amd64/lldap_0.5.0-1+2.1_amd64.deb'
+
+    - name: Install lldap deb
+      ansible.builtin.apt:
+        deb: '/tmp/lldap.deb'
+      become: true
+
+    - name: Deploy config
+      ansible.builtin.template:
+        src: lldap_config.toml.j2
+        dest: /etc/lldap/lldap_config.toml
+        mode: '644'
+        owner: 'lldap'
+        group: 'lldap'
+      become: true
+      notify: handler_restartLldap
+
+    - name: Make sure service is enabled and running
+      ansible.builtin.systemd_service:
+        name: lldap
+        state: started
+        daemon_reload: true
+        enabled: true
+      become: true
+
+  handlers:
+    - name: handler_restartLldap
+      ansible.builtin.systemd_service:
+        name: lldap
+        state: restarted
+      become: true

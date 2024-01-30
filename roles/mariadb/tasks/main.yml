@@ -24,7 +24,6 @@
     check_implicit_admin: true
   become: true
 
-
 - name: Create db user
   community.mysql.mysql_user:
     name: '{{ db_user }}'

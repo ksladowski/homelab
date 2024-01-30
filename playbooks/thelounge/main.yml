@@ -1,0 +1,47 @@
+---
+- name: Bootstrap container
+  hosts: thelounge
+  remote_user: root
+  roles:
+    - root_ansibleuser
+  tags:
+    - bootstrap
+
+- name: Set up thelounge
+  hosts: thelounge
+  tags:
+    - main
+  tasks:
+    - name: Install prerequisites
+      ansible.builtin.apt:
+        name: '{{ item }}'
+        state: present
+      become: true
+      with_items:
+        - nodejs
+    
+    - name: Download thelounge deb
+      ansible.builtin.get_url:
+        dest: '/tmp/thelounge.deb'
+        url: 'https://github.com/thelounge/thelounge-deb/releases/download/v4.4.1/thelounge_4.4.1_all.deb'
+
+    - name: Install thelounge deb
+      ansible.builtin.apt:
+        deb: '/tmp/thelounge.deb'
+      become: true
+
+    - name: Deploy config file
+      ansible.builtin.copy:
+        src: config.js
+        dest: /etc/thelounge/config.js
+        owner: thelounge
+        group: thelounge
+        mode: '600'
+      notify: handler_restartTheLounge
+  
+  handlers:
+    - name: handler_restartTheLounge
+      ansible.builtin.systemd_service:
+        name: thelounge
+        state: restarted
+      become: true

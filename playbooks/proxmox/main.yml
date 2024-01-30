@@ -14,6 +14,7 @@
     - name: Setup pci passthrough
       ansible.builtin.include_tasks:
         file: vfio.yml
+
     - name: Disable subscription nag
       shell: sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
     # notify systemctl restart pveproxy.service

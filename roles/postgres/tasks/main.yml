@@ -1,11 +1,20 @@
 ---
-- name: Create app database
-  community.general.postgresql_db:
+- name: Install postgres
+  ansible.builtin.apt:
+    name: '{{ item }}'
     state: present
-    name: "{{ db_name }}"
   become: true
-  become_user: postgres
-  delegate_to: postgres
+  with_items:
+    - postgresql
+    - python3-psycopg2
+
+- name: Start and enable postgres
+  ansible.builtin.systemd_service:
+    name: postgresql
+    state: started
+    daemon_reload: true
+    enabled: true
+  become: true
 
 - name: Create db user
   community.general.postgresql_user:
@@ -14,32 +23,26 @@
     password: "{{ db_password }}"
   become: true
   become_user: postgres
-  delegate_to: postgres
 
-- name: Grant db user access to app db
-  community.general.postgresql_privs:
-    type: database
-    database: "{{ db_name }}"
-    roles: "{{ db_user }}"
-    grant_option: false
-    privs: all
+- name: Create app database
+  community.general.postgresql_db:
+    state: present
+    name: "{{ db_name }}"
+    owner: "{{ db_user }}"
   become: true
   become_user: postgres
-  delegate_to: postgres
 
 - name: Allow md5 connection for the db user
   community.general.postgresql_pg_hba:
-    dest: "~/data/pg_hba.conf"
+    dest: "/etc/postgresql/15/main/pg_hba.conf"
     contype: host
-    databases: "{{ db_name }}"
-    address: "{{ ansible_host }}"
+    databases: all
     method: md5
     users: "{{ db_user }}"
     create: true
   become: true
   become_user: postgres
   notify: Restart postgres
-  delegate_to: postgres
 
 # Execute restart handler right away
 - name: Flush handlers

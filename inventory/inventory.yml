@@ -2,6 +2,8 @@ containers:
   hosts:
     actual:
     bookstack:
+    thelounge:
+    lldap:
 physical:
   hosts:
     icebox:
@@ -9,3 +11,4 @@ physical:
 smtp:
   hosts:
     bookstack:
+    lldap:
