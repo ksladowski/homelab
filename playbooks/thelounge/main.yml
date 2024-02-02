@@ -31,13 +31,14 @@
       become: true
 
     - name: Deploy config file
-      ansible.builtin.copy:
-        src: config.js
+      ansible.builtin.template:
+        src: config.js.j2
         dest: /etc/thelounge/config.js
         owner: thelounge
         group: thelounge
         mode: '600'
       notify: handler_restartTheLounge
+      become: true
   
   handlers:
     - name: handler_restartTheLounge

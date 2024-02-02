@@ -99,7 +99,7 @@
         chdir: /var/www/bookstack
         cmd: php artisan migrate --force
 
-    # the failed when on this one doesn't work but I'm leaving it for now because
+    # the "failed when" on this one doesn't work but I'm leaving it for now because
     # this is the last step anyway
     - name: Enable apache modules
       community.general.apache2_module:
