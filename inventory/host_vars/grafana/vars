@@ -1,0 +1,4 @@
+ansible_host: 10.0.0.23
+db_user: grafana
+db_name: grafana
+db_password: '{{ vault_db_password }}'

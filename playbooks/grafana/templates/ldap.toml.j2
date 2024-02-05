@@ -1,0 +1,24 @@
+# [log]
+# filters = ldap:debug
+
+[[servers]]
+host = "{{ hostvars['lldap'].ansible_host }}"
+port = 3890
+use_ssl = false
+start_tls = false
+tls_ciphers = []
+min_tls_version = ""
+ssl_skip_verify = false
+
+bind_dn = "uid=bind,ou=people,dc=sladnet,dc=xyz"
+bind_password = """{{ hostvars['lldap'].bind_password }}"""
+timeout = 10
+search_filter = "(uid=%s)"
+search_base_dns = ["dc=sladnet,dc=xyz"]
+
+[servers.attributes]
+member_of = "memberOf"
+email = "mail"
+name = "displayName"
+surname = "sn"
+username = "uid"

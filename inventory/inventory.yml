@@ -4,8 +4,11 @@ containers:
     bookstack:
     thelounge:
     lldap:
+    prometheus:
+    grafana:
 physical:
   hosts:
+    opnsense:
     icebox:
 
 smtp:

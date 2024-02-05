@@ -1,0 +1,46 @@
+---
+- name: Bootstrap container
+  hosts: prometheus
+  remote_user: root
+  roles:
+    - root_ansibleuser
+  tags:
+    - bootstrap
+
+- name: Set up prometheus
+  hosts: prometheus
+  tags:
+    - main
+  tasks:
+    - name: Install prometheus
+      ansible.builtin.apt:
+        name: '{{ item }}'
+        state: present
+      become: true
+      with_items:
+        - prometheus
+
+    - name: start and enable service
+      ansible.builtin.systemd_service:
+        name: prometheus
+        enabled: true
+        state: started
+        daemon_reload: true
+      become: true
+
+    - name: Deploy config
+      ansible.builtin.template:
+        src: prometheus.yml.j2
+        dest: /etc/prometheus/prometheus.yml
+        group: root
+        owner: root
+        mode: '644'
+      become: true
+      notify: handler_restartPrometheus
+
+  handlers:
+    - name: handler_restartPrometheus
+      ansible.builtin.systemd_service:
+        name: prometheus
+        state: restarted
+      become: true

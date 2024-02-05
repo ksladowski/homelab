@@ -41,7 +41,7 @@
     
     - name: Prompt user to run manual operation since yarn module is not working
       ansible.builtin.pause:
-        prompt: "Manually run yarn install in that directory now if installing/updating"
+        prompt: "Manually run yarn install in the /actual-server directory now if installing/updating"
       tags: update
 
     # This is commented out for the time being and must be performed manually.
