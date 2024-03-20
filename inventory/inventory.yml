@@ -10,7 +10,9 @@ physical:
   hosts:
     opnsense:
     icebox:
-
+virtual:
+  hosts:
+    truenas:
 smtp:
   hosts:
     bookstack:

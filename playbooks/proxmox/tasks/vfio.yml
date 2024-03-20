@@ -7,6 +7,7 @@
     path: /etc/default/grub
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
     state: absent
+  become: true
   # notify update grub. Need to add handler
 
 - name: Add new `GRUB_CMDLINE_LINUX_DEFAULT`
@@ -15,6 +16,7 @@
     insertafter: 'GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`'
     line: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"'
     state: present
+  become: true
   # notify update grub. Need to add handler
 
 - name: Blacklist amdgpu drivers on host
@@ -22,6 +24,7 @@
     path: /etc/modprobe.d/blacklist.conf
     line: '{{ item }}'
     state: present
+  become: true
   with_items: 
     - 'blacklist amdgpu'
     - 'blacklist radeon'
@@ -31,6 +34,7 @@
     path: /etc/modules
     line: '{{ item }}'
     state: present
+  become: true
   with_items:
     - 'vfio'
     - 'vfio_iommu_type1'
