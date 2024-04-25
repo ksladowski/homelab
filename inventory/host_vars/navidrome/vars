@@ -1,2 +1,3 @@
-ansible_host: 10.0.0.24
-ct_id: 207
+ansible_host: 10.0.0.29
+ct_id: 210
+systemuser_name: navidrome

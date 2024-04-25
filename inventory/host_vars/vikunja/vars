@@ -1,0 +1,5 @@
+ansible_host: 10.0.0.24
+db_user: vikunja
+db_name: vikunja
+db_password: '{{ vault_db_password }}'
+systemuser_name: vikunja

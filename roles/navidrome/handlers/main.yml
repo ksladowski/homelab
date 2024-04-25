@@ -1,0 +1,6 @@
+---
+- name: handler_restartNavidrome
+  ansible.builtin.systemd_service:
+    name: navidrome
+    state: restarted
+  become: true

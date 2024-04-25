@@ -1,0 +1,6 @@
+---
+- name: handler_restartLldap
+  ansible.builtin.systemd_service:
+    name: lldap
+    state: restarted
+  become: true

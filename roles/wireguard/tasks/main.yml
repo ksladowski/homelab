@@ -1,0 +1,25 @@
+---
+- name: Install wireguard
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  become: true
+  with_items:
+    - wireguard
+    - openresolv # needed to parse config file w/ wg-quick
+    - curl
+
+- name: Copy wg0.conf
+  ansible.builtin.copy:
+    dest: /etc/wireguard/wg0.conf
+    src: wg0.conf
+  notify: handler_restartWireguard
+  become: true
+
+- name: Enable and start wg service
+  ansible.builtin.systemd_service:
+    name: wg-quick@wg0
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true

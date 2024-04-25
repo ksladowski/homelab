@@ -1,0 +1,36 @@
+---
+- name: Install Dependencies
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  become: true
+  with_items:
+    - wget
+
+- name: Download vikunja deb
+  ansible.builtin.get_url:
+    dest: '/tmp/vikunja.deb'
+    url: 'https://dl.vikunja.io/vikunja/0.23.0/vikunja-0.23.0-amd64.deb'
+
+- name: Install lldap deb
+  ansible.builtin.apt:
+    deb: '/tmp/vikunja.deb'
+  become: true
+
+- name: Deploy config
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: /etc/vikunja/config.yml
+    mode: '644'
+    owner: 'vikunja'
+    group: 'vikunja'
+  become: true
+  notify: handler_restartVikunja
+
+- name: Make sure service is enabled and running
+  ansible.builtin.systemd_service:
+    name: vikunja
+    state: started
+    daemon_reload: true
+    enabled: true
+  become: true

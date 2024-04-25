@@ -1,0 +1,4 @@
+---
+- name: handler_reboot
+  ansible.builtin.reboot:
+  become: true

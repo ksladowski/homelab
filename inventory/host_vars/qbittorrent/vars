@@ -1,0 +1,3 @@
+ansible_host: 10.0.0.27
+ct_id: 208
+systemuser_name: qbit

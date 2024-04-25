@@ -1,0 +1,64 @@
+---
+- name: Install Dependencies
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  become: true
+  with_items:
+    - wget
+    - curl
+    - mediainfo
+    - sqlite3
+    - libchromaprint-tools
+
+- name: Create lidarr user / add to lxc-bind group
+  ansible.builtin.user:
+    name: lidarr
+    create_home: true
+    append: true
+    groups: lidarr,lxc-bind
+  become: true
+
+- name: Create application install folder
+  ansible.builtin.file:
+    path: /var/lib/lidarr
+    owner: lidarr
+    group: lidarr
+    state: directory
+  become: true
+
+- name: Download lidarr tarball
+  ansible.builtin.get_url:
+    dest: '/tmp/lidarr.tar.gz'
+    url: 'http://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64'
+  become: true
+
+- name: Extract lidarr tarball
+  ansible.builtin.unarchive:
+    src: /tmp/lidarr.tar.gz
+    dest: /opt/
+    remote_src: yes
+  become: true
+
+- name: Set ownership of lidarr folder
+  ansible.builtin.file:
+    path: /opt/Lidarr
+    owner: lidarr
+    group: lidarr
+    recurse: true
+  become: true
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/lidarr.service
+    src: lidarr.service
+  notify: handler_restartLidarr
+  become: true
+
+- name: Enable and start service
+  ansible.builtin.systemd_service:
+    name: lidarr
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true

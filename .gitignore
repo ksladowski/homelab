@@ -1,3 +1,6 @@
 vault_pass
 ansible
 ansible.pub
+roles/qbittorrent/tasks/scripting.yml
+/roles/qbit-personal/
+/roles/wireguard/files/wg0.conf

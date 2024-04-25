@@ -1,0 +1,61 @@
+---
+- name: Install Dependencies
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  become: true
+  with_items:
+    - wget
+
+- name: Add user to lxc-bind group
+  ansible.builtin.user:
+    name: navidrome
+    create_home: true
+    append: true
+    groups: navidrome,lxc-bind
+  become: true
+
+- name: Create application install folder
+  ansible.builtin.file:
+    path: /var/lib/navidrome
+    owner: navidrome
+    group: navidrome
+    state: directory
+  become: true
+
+- name: Download navidrome tarball
+  ansible.builtin.get_url:
+    dest: '/tmp/navidrome.tar.gz'
+    url: 'https://github.com/navidrome/navidrome/releases/download/v0.51.1/navidrome_0.51.1_linux_amd64.tar.gz'
+  become: true
+
+- name: Extract navidrome tarball
+  ansible.builtin.unarchive:
+    src: /tmp/navidrome.tar.gz
+    dest: /opt/
+    remote_src: yes
+  become: true
+
+- name: Copy config file
+  ansible.builtin.copy:
+    dest: /var/lib/navidrome/navidrome.toml
+    src: navidrome.toml
+    owner: navidrome
+    group: navidrome
+  notify: handler_restartNavidrome
+  become: true
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/navidrome.service
+    src: navidrome.service
+  notify: handler_restartNavidrome
+  become: true
+
+- name: Enable and start service
+  ansible.builtin.systemd_service:
+    name: navidrome
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true

@@ -1,0 +1,6 @@
+---
+- name: handler_restartVikunja
+  ansible.builtin.systemd_service:
+    name: vikunja
+    state: restarted
+  become: true

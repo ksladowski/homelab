@@ -1,0 +1,5 @@
+LogLevel = 'DEBUG'
+ScanSchedule = '@every 24h'
+TranscodingCacheSize = '150MiB'
+MusicFolder = '/mnt/media/music'
+Prometheus.Enabled = 'true'

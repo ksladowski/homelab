@@ -1,0 +1,21 @@
+---
+# syntax here is wrong. Not sure how to escape the shell command
+#- name: Disable subscription nag
+#  shell: sed -Ezi.bak "s/(Ext.Msg.show\(\{\s+title: gettext\('No valid sub)/void\(\{ \/\/\1/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+
+# I don't want to run this right now on my production
+# system until I know it works
+#
+#- name: Setup vfio
+#  ansible.builtin.include_tasks:
+#    file: tasks/vfio.yml
+
+- name: Mount NFS Share
+  ansible.posix.mount:
+    src: "{{ hostvars['truenas'].ansible_host }}:/mnt/EZ14/media"
+    path: /mnt/nfs_media
+    opts: rw,sync,soft
+    boot: false
+    state: mounted
+    fstype: nfs
+  become: true

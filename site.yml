@@ -1,0 +1,80 @@
+---
+
+- hosts: all
+  pre_tasks:
+  - name: Install Updates
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    become: true
+
+- hosts: systemuser
+  roles:
+    - systemuser
+
+- hosts: postgres
+  roles:
+    - postgres
+
+- hosts: apache
+  roles:
+    - apache
+
+- hosts: lxcbind
+  roles:
+    - lxc-bind
+
+- hosts: mariadb
+  roles:
+    - mariadb
+
+- hosts: all
+  roles:
+    - metrics
+
+- hosts: lldap
+  roles:
+    - lldap
+
+- hosts: actual
+  roles:
+    - actual
+
+- hosts: bookstack
+  roles:
+    - bookstack
+
+- hosts: grafana
+  roles:
+    - grafana
+
+- hosts: lidarr
+  roles:
+    - lidarr
+
+- hosts: navidrome
+  roles:
+    - navidrome
+
+- hosts: prometheus
+  roles:
+    - prometheus
+
+- hosts: proxmox
+  roles:
+    - proxmox
+
+- hosts: qbittorrent
+  roles:
+    - wireguard
+    - qbittorrent
+    - qbit-personal
+
+- hosts: thelounge
+  roles:
+    - thelounge
+
+- hosts: vikunja
+  roles:
+    - vikunja

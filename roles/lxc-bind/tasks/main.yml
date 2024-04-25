@@ -1,0 +1,23 @@
+# For now, the reboot handler doesn't seem to be working properly and the container doesn't reboot on its own.
+# Since this is primarily for documentation purposes, I'm leaving it for now
+
+---
+- name: Create lxc-bind group
+  ansible.builtin.group:
+    name: lxc-bind
+    gid: 10000
+    state: present
+  become: true
+
+- name: Add bindmount to ct config on pxe host
+  ansible.builtin.lineinfile:
+    path: '/etc/pve/lxc/{{ ct_id }}.conf'
+    line: 'mp0: /mnt/nfs_media/,mp=/mnt/media'
+    state: present
+  become: true
+  delegate_to: icebox
+  notify: handler_reboot
+
+# Execute restart handler right away
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

@@ -1,0 +1,6 @@
+---
+- name: handler_restartLidarr
+  ansible.builtin.systemd_service:
+    name: lidarr
+    state: restarted
+  become: true

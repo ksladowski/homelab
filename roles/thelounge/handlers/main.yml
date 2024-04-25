@@ -1,0 +1,6 @@
+---
+- name: handler_restartTheLounge
+  ansible.builtin.systemd_service:
+    name: thelounge
+    state: restarted
+  become: true

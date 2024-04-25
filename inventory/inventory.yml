@@ -6,14 +6,44 @@ containers:
     lldap:
     prometheus:
     grafana:
-physical:
+    vikunja:
+    qbittorrent:
+    lidarr:
+    navidrome:
+
+systemuser:
   hosts:
-    opnsense:
-    icebox:
-virtual:
+    lidarr:
+    navidrome:
+    vikunja:
+    qbittorrent:
+
+postgres:
   hosts:
-    truenas:
+    grafana:
+    lldap:
+    vikunja:
+
+lxcbind:
+  hosts:
+    qbittorrent:
+    lidarr:
+    navidrome:
+
+mariadb:
+  hosts:
+    bookstack:
+
+apache:
+  hosts:
+    bookstack:
+
 smtp:
   hosts:
     bookstack:
     lldap:
+    vikunja:
+
+other:
+  hosts:
+    icebox:

@@ -1,0 +1,57 @@
+---
+- name: Set up locale for utf8 - otherwise filenames with symbols aren't regognized correctly
+  community.general.locale_gen:
+    name: en_US.UTF-8
+    state: present
+  become: true
+
+- name: set as default locale
+  ansible.builtin.command:
+    cmd: localectl set-locale LANG=en_US.UTF-8
+  become: true
+
+- name: Install qbittorrent-nox (and git to clone vuetorrentui)
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    state: present
+  become: true
+  with_items:
+    - qbittorrent-nox
+    - git
+
+- name: Create home for qbit user / add to lxc-bind group
+  ansible.builtin.user:
+    name: qbit
+    create_home: true
+    append: true
+    groups: qbit,lxc-bind
+  become: true
+
+- name: Copy systemd service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/qbittorrent.service
+    src: qbittorrent.service
+  notify: handler_restartQbittorrent
+  become: true
+
+- name: Enable and start qbit service
+  ansible.builtin.systemd_service:
+    name: qbittorrent
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true
+
+- name: Install vuetorrent (alternate ui) # must set this in webui as well
+  ansible.builtin.git:
+    repo: 'https://github.com/VueTorrent/VueTorrent.git'
+    dest: /home/qbit/vuetorrent
+    force: true
+    version: latest-release
+    single_branch: true
+  become: true
+  become_user: qbit
+
+- name: personal config
+  ansible.builtin.include_tasks:
+    file: scripting.yml

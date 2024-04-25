@@ -1,0 +1,3 @@
+ansible_host: 10.0.0.28
+ct_id: 209
+systemuser_name: lidarr

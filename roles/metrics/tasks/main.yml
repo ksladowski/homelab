@@ -1,0 +1,20 @@
+---
+- name: Install node-exporter
+  ansible.builtin.apt:
+    name: 'prometheus-node-exporter'
+    state: present
+  become: true
+
+- name: Install postgres-exporter
+  ansible.builtin.apt:
+    name: 'prometheus-postgres-exporter'
+    state: present
+  become: true
+  when: ansible_hostname in groups[‘postgres’]
+
+- name: Install apache-exporter
+  ansible.builtin.apt:
+    name: 'prometheus-apache-exporter'
+    state: present
+  become: true
+  when: ansible_hostname in groups[‘apache’]
