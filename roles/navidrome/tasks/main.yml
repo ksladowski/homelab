@@ -11,6 +11,7 @@
   ansible.builtin.user:
     name: navidrome
     create_home: true
+    uid: 10000
     append: true
     groups: navidrome,lxc-bind
   become: true

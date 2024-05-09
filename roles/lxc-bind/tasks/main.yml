@@ -1,12 +1,20 @@
-# For now, the reboot handler doesn't seem to be working properly and the container doesn't reboot on its own.
-# Since this is primarily for documentation purposes, I'm leaving it for now
-
 ---
 - name: Create lxc-bind group
   ansible.builtin.group:
     name: lxc-bind
     gid: 10000
     state: present
+  become: true
+
+- name: Set up locale for utf8 - otherwise filenames with symbols aren't regognized correctly
+  community.general.locale_gen:
+    name: en_US.UTF-8
+    state: present
+  become: true
+
+- name: set as default locale
+  ansible.builtin.command:
+    cmd: localectl set-locale LANG=en_US.UTF-8
   become: true
 
 - name: Add bindmount to ct config on pxe host

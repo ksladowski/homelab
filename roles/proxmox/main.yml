@@ -14,7 +14,7 @@
   ansible.posix.mount:
     src: "{{ hostvars['truenas'].ansible_host }}:/mnt/EZ14/media"
     path: /mnt/nfs_media
-    opts: rw,sync,soft
+    opts: defaults  # may not be necessary?
     boot: false
     state: mounted
     fstype: nfs

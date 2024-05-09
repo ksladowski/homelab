@@ -1,22 +1,45 @@
+apache:
+  hosts:
+    bookstack:
+
 containers:
   hosts:
     actual:
     bookstack:
     thelounge:
     lldap:
-    prometheus:
     grafana:
     vikunja:
     qbittorrent:
     lidarr:
     navidrome:
+    readarr:
+    readarraudio:
 
-systemuser:
+influxdb:
   hosts:
+    influx:
+
+lxcbind:
+  hosts:
+    qbittorrent:
     lidarr:
     navidrome:
-    vikunja:
-    qbittorrent:
+    readarr:
+    readarraudio:
+
+readarrgroup:
+  hosts:
+    readarr:
+    readarraudio:
+
+mariadb:
+  hosts:
+    bookstack:
+
+other:
+  hosts:
+    icebox:
 
 postgres:
   hosts:
@@ -24,26 +47,31 @@ postgres:
     lldap:
     vikunja:
 
-lxcbind:
-  hosts:
-    qbittorrent:
-    lidarr:
-    navidrome:
-
-mariadb:
-  hosts:
-    bookstack:
-
-apache:
-  hosts:
-    bookstack:
-
 smtp:
   hosts:
     bookstack:
     lldap:
     vikunja:
 
-other:
+systemuser:
   hosts:
-    icebox:
+    lidarr:
+    navidrome:
+    vikunja:
+    qbittorrent:
+    readarr:
+    readarraudio:
+
+telegraf:
+  hosts:
+    actual:
+    bookstack:
+    thelounge:
+    lldap:
+    grafana:
+    vikunja:
+    qbittorrent:
+    lidarr:
+    navidrome:
+    readarr:
+    readarraudio:

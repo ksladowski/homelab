@@ -1,0 +1,3 @@
+ansible_host: 10.0.0.31
+ct_id: 212
+systemuser_name: readarr

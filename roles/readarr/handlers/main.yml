@@ -1,6 +1,6 @@
 ---
-- name: handler_restartPrometheus
+- name: handler_restartReadarr
   ansible.builtin.systemd_service:
-    name: prometheus
+    name: readarr
     state: restarted
   become: true

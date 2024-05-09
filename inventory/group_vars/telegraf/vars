@@ -1,0 +1,1 @@
+influxdb_token: "{{ vault_influxdb_token }}"

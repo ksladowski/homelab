@@ -1,15 +1,4 @@
 ---
-- name: Set up locale for utf8 - otherwise filenames with symbols aren't regognized correctly
-  community.general.locale_gen:
-    name: en_US.UTF-8
-    state: present
-  become: true
-
-- name: set as default locale
-  ansible.builtin.command:
-    cmd: localectl set-locale LANG=en_US.UTF-8
-  become: true
-
 - name: Install qbittorrent-nox (and git to clone vuetorrentui)
   ansible.builtin.apt:
     name: '{{ item }}'
@@ -23,6 +12,7 @@
   ansible.builtin.user:
     name: qbit
     create_home: true
+    uid: 10000
     append: true
     groups: qbit,lxc-bind
   become: true
@@ -51,7 +41,3 @@
     single_branch: true
   become: true
   become_user: qbit
-
-- name: personal config
-  ansible.builtin.include_tasks:
-    file: scripting.yml

@@ -1,8 +1,11 @@
 ## Must login from console once and run the following command to allow connection as root
 ## echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && systemctl restart sshd
+
+
+## Run as follows: ansible-playbook playbooks/bootstrap/main.yml -k --extra-vars "variable_host=<host>"
 ---
 - name: Proxmox host - bootstrap as root
-  hosts: icebox
+  hosts: "{{ variable_host }}"
   remote_user: root
   tasks:
     - name: Remove default repos

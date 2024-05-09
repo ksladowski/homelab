@@ -7,58 +7,56 @@
   with_items:
     - wget
     - curl
-    - mediainfo
     - sqlite3
-    - libchromaprint-tools
 
-- name: Create lidarr user / add to lxc-bind group
+- name: Create readarr user / add to lxc-bind group
   ansible.builtin.user:
-    name: lidarr
+    name: readarr
     uid: 10000
     create_home: true
     append: true
-    groups: lidarr,lxc-bind
+    groups: readarr,lxc-bind
   become: true
 
 - name: Create application install folder
   ansible.builtin.file:
-    path: /var/lib/lidarr
-    owner: lidarr
-    group: lidarr
+    path: /var/lib/readarr
+    owner: readarr
+    group: readarr
     state: directory
   become: true
 
-- name: Download lidarr tarball
+- name: Download readarr tarball
   ansible.builtin.get_url:
-    dest: '/tmp/lidarr.tar.gz'
-    url: 'http://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64'
+    dest: '/tmp/readarr.tar.gz'
+    url: 'https://readarr.servarr.com/v1/update/develop/updatefile?os=linux&runtime=netcore&arch=x64'
   become: true
 
-- name: Extract lidarr tarball
+- name: Extract readarr tarball
   ansible.builtin.unarchive:
-    src: /tmp/lidarr.tar.gz
+    src: /tmp/readarr.tar.gz
     dest: /opt/
     remote_src: yes
   become: true
 
-- name: Set ownership of lidarr folder
+- name: Set ownership of readarr folder
   ansible.builtin.file:
-    path: /opt/Lidarr
-    owner: lidarr
-    group: lidarr
+    path: /opt/Readarr
+    owner: readarr
+    group: readarr
     recurse: true
   become: true
 
 - name: Copy systemd service
   ansible.builtin.copy:
-    dest: /etc/systemd/system/lidarr.service
-    src: lidarr.service
-  notify: handler_restartLidarr
+    dest: /etc/systemd/system/readarr.service
+    src: readarr.service
+  notify: handler_restartReadarr
   become: true
 
 - name: Enable and start service
   ansible.builtin.systemd_service:
-    name: lidarr
+    name: readarr
     enabled: true
     state: started
     daemon_reload: true

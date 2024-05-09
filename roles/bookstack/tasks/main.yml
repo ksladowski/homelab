@@ -1,3 +1,4 @@
+---
 - name: Install prerequisites
   ansible.builtin.apt:
     name: '{{ item }}'
@@ -82,16 +83,11 @@
     chdir: /var/www/bookstack
     cmd: php artisan migrate --force
 
-# the "failed when" on this one doesn't work but I'm leaving it for now because
-# this is the last step anyway
-- name: Enable apache modules
+- name: Enable apache rewrite module
   community.general.apache2_module:
-    name: '{{ item }}'
+    name: 'rewrite'
     state: present
     ignore_configcheck: true
     force: true
   become: true
-  with_items:
-    - rewrite
-    # - php8.2    # I think this is unnecessary on debian b/c of php packages
   notify: handler_restartApache

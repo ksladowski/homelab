@@ -9,9 +9,21 @@
       update_cache: yes
     become: true
 
+- hosts: icebox
+  roles:
+    - proxmox
+
 - hosts: systemuser
   roles:
     - systemuser
+
+- hosts: influx
+  roles:
+    - influxdb
+
+- hosts: telegraf
+  roles:
+    - telegraf
 
 - hosts: postgres
   roles:
@@ -29,10 +41,6 @@
   roles:
     - mariadb
 
-- hosts: all
-  roles:
-    - metrics
-
 - hosts: lldap
   roles:
     - lldap
@@ -45,25 +53,17 @@
   roles:
     - bookstack
 
-- hosts: grafana
-  roles:
-    - grafana
-
 - hosts: lidarr
   roles:
     - lidarr
 
+- hosts: readarrgroup
+  roles:
+    - readarr
+
 - hosts: navidrome
   roles:
     - navidrome
-
-- hosts: prometheus
-  roles:
-    - prometheus
-
-- hosts: proxmox
-  roles:
-    - proxmox
 
 - hosts: qbittorrent
   roles:
